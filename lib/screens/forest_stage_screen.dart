@@ -15,6 +15,7 @@ import '../services/settings_storage.dart';
 import '../services/motivation_service.dart';
 import '../services/learning_support_service.dart';
 import '../services/narrator_service.dart';
+import '../widgets/fireworks_celebration.dart';
 
 class ForestStageScreen extends StatefulWidget {
   final Player player;
@@ -157,27 +158,35 @@ class _ForestStageScreenState extends State<ForestStageScreen> {
     await showDialog<void>(
       context: context,
       barrierDismissible: false,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(
-          widget.stage.number == 20
-              ? '👑 هزمت زعيم المادة!'
-              : '🎉 اكتملت ${widget.stage.name}',
-          textAlign: TextAlign.center,
-          textDirection: TextDirection.rtl,
-        ),
-        content: Text(
-          'أكملت $correctCount تحديات\n'
-          '⭐ +$correctCount نجوم   🪙 +${correctCount * 10}\n'
-          '💎 حصلت على بلورة المرحلة',
-          textAlign: TextAlign.center,
-          textDirection: TextDirection.rtl,
-          style: const TextStyle(fontSize: 18, height: 1.7),
-        ),
-        actionsAlignment: MainAxisAlignment.center,
-        actions: [
-          ElevatedButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('العودة إلى الخريطة'),
+      builder: (dialogContext) => Stack(
+        alignment: Alignment.center,
+        children: [
+          const Positioned.fill(
+            child: IgnorePointer(child: FireworksCelebration()),
+          ),
+          AlertDialog(
+            title: Text(
+              widget.stage.number == 20
+                  ? '👑 هزمت زعيم المادة!'
+                  : '🎉 اكتملت ${widget.stage.name}',
+              textAlign: TextAlign.center,
+              textDirection: TextDirection.rtl,
+            ),
+            content: Text(
+              'أكملت $correctCount تحديات\n'
+              '⭐ +$correctCount نجوم   🪙 +${correctCount * 10}\n'
+              '💎 حصلت على بلورة المرحلة',
+              textAlign: TextAlign.center,
+              textDirection: TextDirection.rtl,
+              style: const TextStyle(fontSize: 18, height: 1.7),
+            ),
+            actionsAlignment: MainAxisAlignment.center,
+            actions: [
+              ElevatedButton(
+                onPressed: () => Navigator.pop(dialogContext),
+                child: const Text('العودة إلى الخريطة'),
+              ),
+            ],
           ),
         ],
       ),
@@ -190,6 +199,9 @@ class _ForestStageScreenState extends State<ForestStageScreen> {
     LearningSubject.science => '🔬 علوم',
     LearningSubject.culture => '🌍 معرفة',
     LearningSubject.logic => '🧠 منطق',
+    LearningSubject.arabic => '📖 اللغة العربية',
+    LearningSubject.history => '🏺 التاريخ',
+    LearningSubject.geography => '🗺️ الجغرافيا',
     LearningSubject.mixed => '🏆 التحدي النهائي',
   };
 

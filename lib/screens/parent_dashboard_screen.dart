@@ -169,6 +169,9 @@ class _ParentDashboardScreenState extends State<ParentDashboardScreen> {
     'science' => 'العلوم',
     'culture' => 'المعرفة',
     'logic' => 'المنطق',
+    'arabic' => 'اللغة العربية',
+    'history' => 'التاريخ',
+    'geography' => 'الجغرافيا',
     'mixed' => 'التحديات المختلطة',
     _ => subject,
   };

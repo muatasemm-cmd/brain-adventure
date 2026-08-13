@@ -617,7 +617,7 @@ class _MainButton extends StatelessWidget {
           'ابدأ التعلم',
           style: TextStyle(fontSize: 25, fontWeight: FontWeight.w900),
         ),
-        Text('4 مواد • 80 مرحلة • 400 سؤال', textDirection: TextDirection.rtl),
+        Text('7 مواد • 140 مرحلة • 700 سؤال', textDirection: TextDirection.rtl),
       ],
     ),
     style: ElevatedButton.styleFrom(

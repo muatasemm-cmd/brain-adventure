@@ -31,4 +31,17 @@ void main() {
     expect(young.question, isNot(older.question));
     expect(young.correctAnswer, isNot(older.correctAnswer));
   });
+
+  test('أسئلة كل المواد تختلف بين أعمار 8 و10 و12', () {
+    for (final subject in subjectAdventures) {
+      final questions = [
+        for (final age in [8, 10, 12])
+          subjectStagesFor(
+            adventure: subject,
+            age: age,
+          ).first.challenges.first.question,
+      ];
+      expect(questions.toSet().length, 3, reason: subject.title);
+    }
+  });
 }

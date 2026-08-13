@@ -7,7 +7,16 @@ enum ChallengeType {
   memory,
 }
 
-enum LearningSubject { math, science, culture, logic, mixed }
+enum LearningSubject {
+  math,
+  science,
+  culture,
+  logic,
+  arabic,
+  history,
+  geography,
+  mixed,
+}
 
 class LearningChallenge {
   final String id;

@@ -51,71 +51,72 @@ class SubjectSelectionScreen extends StatelessWidget {
                 textDirection: TextDirection.rtl,
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
-              const Spacer(),
-              Container(
-                margin: const EdgeInsets.all(18),
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: .93),
-                  borderRadius: BorderRadius.circular(28),
-                ),
-                child: GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    childAspectRatio: 1.08,
+              const SizedBox(height: 10),
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.all(18),
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: .93),
+                    borderRadius: BorderRadius.circular(28),
                   ),
-                  itemCount: subjectAdventures.length,
-                  itemBuilder: (context, index) {
-                    final subject = subjectAdventures[index];
-                    final color = Color(subject.colorValue);
-                    return InkWell(
-                      borderRadius: BorderRadius.circular(22),
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => SubjectWorldScreen(
-                            player: player,
-                            adventure: subject,
+                  child: GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 12,
+                          mainAxisSpacing: 12,
+                          childAspectRatio: 1.08,
+                        ),
+                    itemCount: subjectAdventures.length,
+                    itemBuilder: (context, index) {
+                      final subject = subjectAdventures[index];
+                      final color = Color(subject.colorValue);
+                      return InkWell(
+                        borderRadius: BorderRadius.circular(22),
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => SubjectWorldScreen(
+                              player: player,
+                              adventure: subject,
+                            ),
                           ),
                         ),
-                      ),
-                      child: Ink(
-                        decoration: BoxDecoration(
-                          color: color.withValues(alpha: .13),
-                          borderRadius: BorderRadius.circular(22),
-                          border: Border.all(color: color, width: 2),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              subject.icon,
-                              style: const TextStyle(fontSize: 44),
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              subject.title,
-                              style: TextStyle(
-                                color: color,
-                                fontWeight: FontWeight.w900,
-                                fontSize: 20,
+                        child: Ink(
+                          decoration: BoxDecoration(
+                            color: color.withValues(alpha: .13),
+                            borderRadius: BorderRadius.circular(22),
+                            border: Border.all(color: color, width: 2),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                subject.icon,
+                                style: const TextStyle(fontSize: 44),
                               ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              subject.description,
-                              textDirection: TextDirection.rtl,
-                              style: const TextStyle(fontSize: 12),
-                            ),
-                          ],
+                              const SizedBox(height: 6),
+                              Text(
+                                subject.title,
+                                style: TextStyle(
+                                  color: color,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 20,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                subject.description,
+                                textDirection: TextDirection.rtl,
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ),
             ],

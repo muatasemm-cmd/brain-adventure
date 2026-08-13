@@ -74,7 +74,15 @@ class LearningSupportService {
   }
 
   static Future<Map<String, int>> loadPlacementLevels(String playerId) async {
-    const subjects = ['math', 'science', 'culture', 'logic'];
+    const subjects = [
+      'math',
+      'science',
+      'culture',
+      'logic',
+      'arabic',
+      'history',
+      'geography',
+    ];
     return {
       for (final subject in subjects)
         subject: await loadPlacementLevel(playerId, subject) ?? 2,

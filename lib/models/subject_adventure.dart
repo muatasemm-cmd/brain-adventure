@@ -51,4 +51,28 @@ const subjectAdventures = <SubjectAdventure>[
     backgroundAsset: 'assets/images/forest_path.png',
     colorValue: 0xFF7C3AED,
   ),
+  SubjectAdventure(
+    subject: LearningSubject.arabic,
+    title: 'اللغة العربية',
+    icon: '📖',
+    description: '20 مرحلة • 100 سؤال',
+    backgroundAsset: 'assets/images/garden_path.png',
+    colorValue: 0xFFE11D48,
+  ),
+  SubjectAdventure(
+    subject: LearningSubject.history,
+    title: 'التاريخ',
+    icon: '🏺',
+    description: '20 مرحلة • 100 سؤال',
+    backgroundAsset: 'assets/images/cartoon_map.png',
+    colorValue: 0xFFB45309,
+  ),
+  SubjectAdventure(
+    subject: LearningSubject.geography,
+    title: 'الجغرافيا',
+    icon: '🗺️',
+    description: '20 مرحلة • 100 سؤال',
+    backgroundAsset: 'assets/images/forest_map.png',
+    colorValue: 0xFF0891B2,
+  ),
 ];
