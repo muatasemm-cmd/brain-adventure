@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/subject_badge.dart';
-import 'player_selection_screen.dart';
+import 'journey_selection_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -92,7 +92,7 @@ class WelcomeScreen extends StatelessWidget {
                 onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => const PlayerSelectionScreen(),
+                    builder: (_) => const JourneySelectionScreen(),
                   ),
                 ),
                 icon: const Icon(Icons.play_arrow_rounded, size: 32),

@@ -22,7 +22,8 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
 
-    expect(find.text('اختر المغامر'), findsOneWidget);
-    expect(find.text('إضافة لاعب'), findsOneWidget);
+    expect(find.text('اختر مغامرتك'), findsOneWidget);
+    expect(find.text('مغامرة الأطفال'), findsOneWidget);
+    expect(find.text('تحدي الكبار'), findsOneWidget);
   });
 }
