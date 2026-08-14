@@ -61,6 +61,17 @@ class WelcomeScreen extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
+              const SizedBox(height: 8),
+              const Text(
+                'مغامرة تعليمية ممتعة للأطفال',
+                textDirection: TextDirection.rtl,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
+              ),
               const SizedBox(height: 35),
               const Wrap(
                 alignment: WrapAlignment.center,
@@ -103,6 +114,19 @@ class WelcomeScreen extends StatelessWidget {
                 '🚀 جاهز لتحدي عقلك؟',
                 textDirection: TextDirection.rtl,
                 style: TextStyle(color: Colors.white, fontSize: 15),
+              ),
+              const SizedBox(height: 8),
+              const Directionality(
+                textDirection: TextDirection.rtl,
+                child: Text(
+                  'برمجة وتطوير: معتصم معكوسة',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
             ],
           ),
