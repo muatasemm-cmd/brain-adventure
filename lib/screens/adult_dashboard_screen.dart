@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../data/adult_challenge_data.dart';
 import '../models/adult_player.dart';
 import '../models/adult_question.dart';
 import '../services/adult_storage.dart';
+import '../services/online_content_service.dart';
 import 'adult_quiz_screen.dart';
 
 class AdultDashboardScreen extends StatefulWidget {
@@ -16,8 +16,10 @@ class AdultDashboardScreen extends StatefulWidget {
 }
 
 class _AdultDashboardScreenState extends State<AdultDashboardScreen> {
-  final categories = buildAdultCategories();
+  List<AdultCategory> categories = const [];
   Map<String, int> progress = {};
+  OnlineContentResult? onlineContent;
+  bool contentLoading = true;
 
   @override
   void initState() {
@@ -26,7 +28,14 @@ class _AdultDashboardScreenState extends State<AdultDashboardScreen> {
   }
 
   Future<void> load() async {
-    progress = await AdultStorage.loadProgress(widget.player.id);
+    final results = await Future.wait([
+      AdultStorage.loadProgress(widget.player.id),
+      OnlineContentService.load(forceRefresh: true),
+    ]);
+    progress = results[0] as Map<String, int>;
+    onlineContent = results[1] as OnlineContentResult;
+    categories = onlineContent!.categories;
+    contentLoading = false;
     if (mounted) setState(() {});
   }
 
@@ -48,6 +57,23 @@ class _AdultDashboardScreenState extends State<AdultDashboardScreen> {
         foregroundColor: Colors.white,
         title: Text('مرحبًا ${widget.player.name}'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            tooltip: 'تحديث المحتوى',
+            onPressed: contentLoading
+                ? null
+                : () async {
+                    setState(() => contentLoading = true);
+                    await load();
+                  },
+            icon: contentLoading
+                ? const SizedBox.square(
+                    dimension: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.sync_rounded),
+          ),
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: load,
@@ -70,6 +96,29 @@ class _AdultDashboardScreenState extends State<AdultDashboardScreen> {
                   _Stat(value: widget.player.level, label: 'البداية'),
                 ],
               ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  onlineContent?.fromInternet == true
+                      ? Icons.cloud_done_rounded
+                      : Icons.offline_bolt_rounded,
+                  size: 18,
+                  color: onlineContent?.fromInternet == true
+                      ? const Color(0xFF4ADE80)
+                      : Colors.white60,
+                ),
+                const SizedBox(width: 7),
+                Text(
+                  onlineContent == null
+                      ? 'جاري فحص تحديثات المحتوى...'
+                      : '${onlineContent!.message} • إصدار ${onlineContent!.version}',
+                  textDirection: TextDirection.rtl,
+                  style: const TextStyle(color: Colors.white70, fontSize: 12),
+                ),
+              ],
             ),
             const SizedBox(height: 24),
             const Text(
