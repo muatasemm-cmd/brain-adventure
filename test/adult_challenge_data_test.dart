@@ -2,9 +2,9 @@ import 'package:brain_adventure/data/adult_challenge_data.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('نسخة الكبار تحتوي 6 مجالات و10 مستويات من 5 أسئلة', () {
+  test('نسخة الكبار تحتوي 10 مجالات و10 مستويات من 5 أسئلة', () {
     final categories = buildAdultCategories();
-    expect(categories, hasLength(6));
+    expect(categories, hasLength(10));
     for (final category in categories) {
       expect(category.questions, hasLength(50));
       for (var level = 1; level <= 10; level++) {
