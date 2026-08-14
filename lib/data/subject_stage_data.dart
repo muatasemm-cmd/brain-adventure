@@ -94,6 +94,41 @@ List<ForestStage> subjectStagesFor({
 
 typedef _QuizFact = (String, List<String>, String);
 
+const _stageThemes = [
+  'بوابة البداية',
+  'حديقة الأسرار',
+  'جسر المعرفة',
+  'كهف الأصداء',
+  'جزيرة الكلمات',
+  'برج الحكمة',
+  'وادي الاكتشاف',
+  'مكتبة النجوم',
+  'قلعة الأبطال',
+  'نهر الحكايات',
+  'متحف العجائب',
+  'سفينة المغامرين',
+  'مدينة الألغاز',
+  'مرصد القمر',
+  'طريق القوافل',
+  'مملكة الألوان',
+  'جبل التحدي',
+  'واحة المفكرين',
+  'بوابة الزمن',
+  'عرش العباقرة',
+];
+
+String _missionQuestion(String question, int stage, int index) {
+  final theme = _stageThemes[(stage - 1) % _stageThemes.length];
+  final introductions = [
+    'لفتح $theme، أجب: ',
+    'وجدت البطاقة ${index + 1} في $theme. ',
+    'مهمة المستكشف في $theme: ',
+    'كي تجمع نجمة $theme، حل هذا التحدي: ',
+    'السؤال السري رقم ${index + 1} في $theme: ',
+  ];
+  return '${introductions[index % introductions.length]}$question';
+}
+
 const _arabicPool = <_QuizFact>[
   ('ما جمع كلمة كتاب؟', ['كتب', 'كاتب', 'مكتبة'], 'كتب'),
   ('ما ضد كلمة كبير؟', ['صغير', 'طويل', 'قريب'], 'صغير'),
@@ -191,12 +226,18 @@ List<LearningChallenge> _knowledgeQuestions(
       LearningSubject.geography => 'مستكشف العالم',
       _ => 'تحدي المعرفة',
     },
-    question: fact.$1,
-    options: fact.$2,
+    question: _missionQuestion(fact.$1, stage, index),
+    options: _rotatedOptions(fact.$2, stage + index),
     answer: fact.$3,
     difficulty: difficulty,
   );
 });
+
+List<String> _rotatedOptions(List<String> options, int offset) {
+  if (options.isEmpty) return options;
+  final shift = offset % options.length;
+  return [...options.skip(shift), ...options.take(shift)];
+}
 
 List<LearningChallenge> _math(String p, int band, int age, int stage, int d) {
   final a = age + stage + 2;
@@ -319,8 +360,8 @@ List<LearningChallenge> _science(
       id: '${p}_q${i + 1}',
       subject: LearningSubject.science,
       title: 'مختبر العلوم',
-      question: q.$1,
-      options: q.$2,
+      question: _missionQuestion(q.$1, stage, i),
+      options: _rotatedOptions(q.$2, stage + i),
       answer: q.$3,
       difficulty: d,
     );
@@ -348,8 +389,8 @@ List<LearningChallenge> _culture(
       id: '${p}_q${i + 1}',
       subject: LearningSubject.culture,
       title: 'رحلة المعرفة',
-      question: q.$1,
-      options: q.$2,
+      question: _missionQuestion(q.$1, stage, i),
+      options: _rotatedOptions(q.$2, stage + i),
       answer: q.$3,
       difficulty: d,
     );
@@ -386,8 +427,8 @@ List<LearningChallenge> _logic(String p, int band, int age, int stage, int d) {
       id: '${p}_q3',
       subject: LearningSubject.logic,
       title: 'المختلف',
-      question: 'أيها مختلف عن الباقي؟',
-      options: ['🍎', '🍌', '🍇', '🚗'],
+      question: _missionQuestion('أيها مختلف عن الباقي؟', stage, 2),
+      options: _rotatedOptions(['🍎', '🍌', '🍇', '🚗'], stage),
       answer: '🚗',
       difficulty: d,
     ),
@@ -395,7 +436,11 @@ List<LearningChallenge> _logic(String p, int band, int age, int stage, int d) {
       id: '${p}_q4',
       subject: LearningSubject.logic,
       title: 'الاستنتاج',
-      question: 'كل الطيور لها ريش. العصفور طائر. هل للعصفور ريش؟',
+      question: _missionQuestion(
+        'كل الطيور لها ريش. العصفور طائر. هل للعصفور ريش؟',
+        stage,
+        3,
+      ),
       options: ['صح', 'خطأ'],
       answer: 'صح',
       difficulty: d,
@@ -405,8 +450,8 @@ List<LearningChallenge> _logic(String p, int band, int age, int stage, int d) {
       id: '${p}_q5',
       subject: LearningSubject.logic,
       title: 'الذاكرة',
-      question: 'اكشف كل الأزواج المتطابقة.',
-      options: ['🌟', '🌙', '🌈'],
+      question: _missionQuestion('اكشف كل الأزواج المتطابقة.', stage, 4),
+      options: _rotatedOptions(['🌟', '🌙', '🌈'], stage),
       answer: 'matched',
       difficulty: d,
       type: ChallengeType.memory,

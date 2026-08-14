@@ -44,4 +44,29 @@ void main() {
       expect(questions.toSet().length, 3, reason: subject.title);
     }
   });
+
+  test('لا يتكرر نص أي سؤال بين المراحل العشرين في كل مادة', () {
+    for (final subject in subjectAdventures) {
+      final allQuestions = subjectStagesFor(adventure: subject, age: 9)
+          .expand((stage) => stage.challenges)
+          .map((challenge) => challenge.question)
+          .toList();
+      expect(allQuestions.length, 100);
+      expect(
+        allQuestions.toSet().length,
+        100,
+        reason: 'وجد تكرار في مادة ${subject.title}',
+      );
+    }
+  });
+
+  test('لا تتطابق مجموعة أسئلة مرحلتين في أي مادة', () {
+    for (final subject in subjectAdventures) {
+      final stages = subjectStagesFor(adventure: subject, age: 9);
+      final signatures = stages
+          .map((stage) => stage.challenges.map((q) => q.question).join('|'))
+          .toSet();
+      expect(signatures.length, 20, reason: subject.title);
+    }
+  });
 }
