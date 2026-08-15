@@ -51,6 +51,8 @@ class AdultStorage {
   }
 
   static String _progressKey(String playerId) => 'adult_progress_$playerId';
+  static String _mistakesKey(String playerId) => 'adult_mistakes_$playerId';
+  static String _dailyKey(String playerId) => 'adult_daily_$playerId';
 
   static Future<Map<String, int>> loadProgress(String playerId) async {
     final preferences = await SharedPreferences.getInstance();
@@ -72,5 +74,55 @@ class AdultStorage {
     if (score > (progress[key] ?? -1)) progress[key] = score;
     final preferences = await SharedPreferences.getInstance();
     await preferences.setString(_progressKey(playerId), jsonEncode(progress));
+  }
+
+  static Future<Set<String>> loadMistakes(String playerId) async {
+    final preferences = await SharedPreferences.getInstance();
+    return (preferences.getStringList(_mistakesKey(playerId)) ?? const [])
+        .toSet();
+  }
+
+  static Future<void> recordMistake(String playerId, String questionId) async {
+    final mistakes = await loadMistakes(playerId)
+      ..add(questionId);
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.setStringList(_mistakesKey(playerId), mistakes.toList());
+  }
+
+  static Future<void> masterQuestion(String playerId, String questionId) async {
+    final mistakes = await loadMistakes(playerId)
+      ..remove(questionId);
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.setStringList(_mistakesKey(playerId), mistakes.toList());
+  }
+
+  static String dayKey(DateTime date) =>
+      '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+
+  static Future<Map<String, dynamic>> loadDaily(String playerId) async {
+    final preferences = await SharedPreferences.getInstance();
+    final encoded = preferences.getString(_dailyKey(playerId));
+    if (encoded == null) return {};
+    return jsonDecode(encoded) as Map<String, dynamic>;
+  }
+
+  static Future<int> recordDailyResult({
+    required String playerId,
+    required DateTime now,
+    required int score,
+  }) async {
+    final data = await loadDaily(playerId);
+    final today = dayKey(now);
+    if (data['lastDay'] == today) return data['streak'] as int? ?? 1;
+    final yesterday = dayKey(now.subtract(const Duration(days: 1)));
+    final streak = data['lastDay'] == yesterday
+        ? (data['streak'] as int? ?? 0) + 1
+        : 1;
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.setString(
+      _dailyKey(playerId),
+      jsonEncode({'lastDay': today, 'streak': streak, 'score': score}),
+    );
+    return streak;
   }
 }

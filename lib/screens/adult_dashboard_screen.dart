@@ -6,6 +6,7 @@ import '../services/adult_storage.dart';
 import '../services/online_content_service.dart';
 import '../data/adult_challenge_data.dart';
 import 'adult_levels_screen.dart';
+import 'adult_special_challenge_screen.dart';
 
 class AdultDashboardScreen extends StatefulWidget {
   final AdultPlayer player;
@@ -21,6 +22,8 @@ class _AdultDashboardScreenState extends State<AdultDashboardScreen> {
   Map<String, int> progress = {};
   OnlineContentResult? onlineContent;
   bool contentLoading = true;
+  Map<String, dynamic> daily = {};
+  Set<String> mistakes = {};
 
   @override
   void initState() {
@@ -32,10 +35,14 @@ class _AdultDashboardScreenState extends State<AdultDashboardScreen> {
     final results = await Future.wait([
       AdultStorage.loadProgress(widget.player.id),
       OnlineContentService.load(forceRefresh: true),
+      AdultStorage.loadDaily(widget.player.id),
+      AdultStorage.loadMistakes(widget.player.id),
     ]);
     progress = results[0] as Map<String, int>;
     onlineContent = results[1] as OnlineContentResult;
     categories = onlineContent!.categories;
+    daily = results[2] as Map<String, dynamic>;
+    mistakes = results[3] as Set<String>;
     contentLoading = false;
     if (mounted) setState(() {});
   }
@@ -124,6 +131,80 @@ class _AdultDashboardScreenState extends State<AdultDashboardScreen> {
             ),
             const SizedBox(height: 24),
             const Text(
+              'أوضاع اللعب',
+              textAlign: TextAlign.right,
+              textDirection: TextDirection.rtl,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 25,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+            const SizedBox(height: 12),
+            GridView.count(
+              crossAxisCount: MediaQuery.sizeOf(context).width > 650 ? 4 : 2,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              childAspectRatio: 1.7,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              children: [
+                _ModeCard(
+                  icon: '☀️',
+                  title: 'تحدي اليوم',
+                  subtitle: '🔥 ${daily['streak'] ?? 0} أيام',
+                  onTap: () => openMode(AdultPlayMode.daily),
+                ),
+                _ModeCard(
+                  icon: '⏱️',
+                  title: 'تحدي الوقت',
+                  subtitle: '60 ثانية',
+                  onTap: () => openMode(AdultPlayMode.timed),
+                ),
+                _ModeCard(
+                  icon: '❤️',
+                  title: 'وضع البقاء',
+                  subtitle: '3 محاولات',
+                  onTap: () => openMode(AdultPlayMode.survival),
+                ),
+                _ModeCard(
+                  icon: '🔁',
+                  title: 'مراجعة ذكية',
+                  subtitle: '${mistakes.length} أسئلة',
+                  onTap: () => openMode(AdultPlayMode.review),
+                ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            Wrap(
+              alignment: WrapAlignment.center,
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                _Achievement(
+                  label: 'أول خطوة',
+                  icon: '⭐',
+                  unlocked: progress.isNotEmpty,
+                ),
+                _Achievement(
+                  label: 'متحدٍ نشيط',
+                  icon: '🏅',
+                  unlocked: progress.length >= 10,
+                ),
+                _Achievement(
+                  label: 'ثبات 3 أيام',
+                  icon: '🔥',
+                  unlocked: (daily['streak'] as int? ?? 0) >= 3,
+                ),
+                _Achievement(
+                  label: 'ذاكرة صافية',
+                  icon: '🧠',
+                  unlocked: progress.isNotEmpty && mistakes.isEmpty,
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+            const Text(
               'اختر مجال التحدي',
               textAlign: TextAlign.right,
               textDirection: TextDirection.rtl,
@@ -169,6 +250,21 @@ class _AdultDashboardScreenState extends State<AdultDashboardScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> openMode(AdultPlayMode mode) async {
+    if (categories.isEmpty) return;
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => AdultSpecialChallengeScreen(
+          player: widget.player,
+          categories: categories,
+          mode: mode,
+        ),
+      ),
+    );
+    await load();
   }
 }
 
@@ -239,6 +335,85 @@ class _CategoryCard extends StatelessWidget {
           ],
         ),
       ),
+    ),
+  );
+}
+
+class _ModeCard extends StatelessWidget {
+  final String icon;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  const _ModeCard({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) => Card(
+    color: const Color(0xFF312E81),
+    child: InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          textDirection: TextDirection.rtl,
+          children: [
+            Text(icon, style: const TextStyle(fontSize: 28)),
+            const SizedBox(width: 9),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    title,
+                    textDirection: TextDirection.rtl,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    subtitle,
+                    textDirection: TextDirection.rtl,
+                    style: const TextStyle(color: Colors.white60, fontSize: 11),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+class _Achievement extends StatelessWidget {
+  final String label;
+  final String icon;
+  final bool unlocked;
+
+  const _Achievement({
+    required this.label,
+    required this.icon,
+    required this.unlocked,
+  });
+
+  @override
+  Widget build(BuildContext context) => Chip(
+    avatar: Text(unlocked ? icon : '🔒'),
+    label: Text(label),
+    backgroundColor: unlocked
+        ? const Color(0xFFFDE68A)
+        : const Color(0xFF334155),
+    labelStyle: TextStyle(
+      color: unlocked ? const Color(0xFF422006) : Colors.white54,
+      fontWeight: FontWeight.bold,
     ),
   );
 }

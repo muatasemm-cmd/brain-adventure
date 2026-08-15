@@ -37,8 +37,14 @@ class _AdultQuizScreenState extends State<AdultQuizScreen> {
 
   AdultQuestion get question => questions[index];
 
-  void answer(String option) {
+  Future<void> answer(String option) async {
     if (selected != null) return;
+    if (option == question.answer) {
+      await AdultStorage.masterQuestion(widget.player.id, question.id);
+    } else {
+      await AdultStorage.recordMistake(widget.player.id, question.id);
+    }
+    if (!mounted) return;
     setState(() {
       selected = option;
       if (option == question.answer) score++;
