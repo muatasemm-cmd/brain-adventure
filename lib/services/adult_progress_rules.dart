@@ -8,6 +8,9 @@ class AdultProgressRules {
   static bool isLevelUnlocked(
     Map<String, int> progress,
     String categoryId,
-    int level,
-  ) => level == 1 || isLevelCompleted(progress, categoryId, level - 1);
+    int level, {
+    int placementStart = 1,
+  }) =>
+      level <= placementStart ||
+      isLevelCompleted(progress, categoryId, level - 1);
 }

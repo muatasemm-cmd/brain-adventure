@@ -53,6 +53,8 @@ class AdultStorage {
   static String _progressKey(String playerId) => 'adult_progress_$playerId';
   static String _mistakesKey(String playerId) => 'adult_mistakes_$playerId';
   static String _dailyKey(String playerId) => 'adult_daily_$playerId';
+  static String _placementKey(String playerId) => 'adult_placement_$playerId';
+  static String _reportsKey(String playerId) => 'adult_reports_$playerId';
 
   static Future<Map<String, int>> loadProgress(String playerId) async {
     final preferences = await SharedPreferences.getInstance();
@@ -124,5 +126,47 @@ class AdultStorage {
       jsonEncode({'lastDay': today, 'streak': streak, 'score': score}),
     );
     return streak;
+  }
+
+  static Future<int?> loadPlacement(String playerId) async {
+    final preferences = await SharedPreferences.getInstance();
+    return preferences.getInt(_placementKey(playerId));
+  }
+
+  static Future<void> savePlacement(String playerId, int startLevel) async {
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.setInt(_placementKey(playerId), startLevel);
+  }
+
+  static Future<List<Map<String, dynamic>>> loadReports(String playerId) async {
+    final preferences = await SharedPreferences.getInstance();
+    final encoded = preferences.getString(_reportsKey(playerId));
+    if (encoded == null) return [];
+    return (jsonDecode(encoded) as List)
+        .map((item) => Map<String, dynamic>.from(item as Map))
+        .toList();
+  }
+
+  static Future<void> reportQuestion({
+    required String playerId,
+    required String questionId,
+    required String question,
+    required String reason,
+  }) async {
+    final reports = await loadReports(playerId);
+    reports.removeWhere((item) => item['questionId'] == questionId);
+    reports.add({
+      'questionId': questionId,
+      'question': question,
+      'reason': reason,
+      'createdAt': DateTime.now().toIso8601String(),
+    });
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.setString(_reportsKey(playerId), jsonEncode(reports));
+  }
+
+  static Future<void> clearReports(String playerId) async {
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.remove(_reportsKey(playerId));
   }
 }

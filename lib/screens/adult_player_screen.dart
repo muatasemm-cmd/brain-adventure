@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/adult_player.dart';
 import '../services/adult_storage.dart';
 import 'adult_dashboard_screen.dart';
+import 'adult_placement_screen.dart';
 
 class AdultPlayerScreen extends StatefulWidget {
   const AdultPlayerScreen({super.key});
@@ -168,12 +169,20 @@ class _AdultPlayerScreenState extends State<AdultPlayerScreen> {
                       if (mounted) setState(() {});
                     },
                   ),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => AdultDashboardScreen(player: player),
-                    ),
-                  ),
+                  onTap: () async {
+                    final placement = await AdultStorage.loadPlacement(
+                      player.id,
+                    );
+                    if (!context.mounted) return;
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => placement == null
+                            ? AdultPlacementScreen(player: player)
+                            : AdultDashboardScreen(player: player),
+                      ),
+                    );
+                  },
                 ),
               );
             },

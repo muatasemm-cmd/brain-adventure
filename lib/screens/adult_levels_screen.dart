@@ -24,6 +24,7 @@ class AdultLevelsScreen extends StatefulWidget {
 class _AdultLevelsScreenState extends State<AdultLevelsScreen> {
   Map<String, int> progress = {};
   bool loading = true;
+  int placementStart = 1;
 
   @override
   void initState() {
@@ -32,15 +33,24 @@ class _AdultLevelsScreenState extends State<AdultLevelsScreen> {
   }
 
   Future<void> load() async {
-    progress = await AdultStorage.loadProgress(widget.player.id);
+    final results = await Future.wait([
+      AdultStorage.loadProgress(widget.player.id),
+      AdultStorage.loadPlacement(widget.player.id),
+    ]);
+    progress = results[0] as Map<String, int>;
+    placementStart = results[1] as int? ?? 1;
     if (mounted) setState(() => loading = false);
   }
 
   bool isCompleted(int level) =>
       AdultProgressRules.isLevelCompleted(progress, widget.category.id, level);
 
-  bool isUnlocked(int level) =>
-      AdultProgressRules.isLevelUnlocked(progress, widget.category.id, level);
+  bool isUnlocked(int level) => AdultProgressRules.isLevelUnlocked(
+    progress,
+    widget.category.id,
+    level,
+    placementStart: placementStart,
+  );
 
   Future<void> openLevel(int level) async {
     if (!isUnlocked(level)) return;

@@ -13,4 +13,15 @@ void main() {
     expect(AdultProgressRules.isLevelUnlocked(progress, 'science', 2), isFalse);
     expect(AdultProgressRules.isLevelUnlocked(progress, 'arabic', 3), isFalse);
   });
+
+  test('تحديد المستوى يفتح نقطة البداية والمراحل السابقة', () {
+    expect(
+      AdultProgressRules.isLevelUnlocked({}, 'arabic', 5, placementStart: 5),
+      isTrue,
+    );
+    expect(
+      AdultProgressRules.isLevelUnlocked({}, 'arabic', 6, placementStart: 5),
+      isFalse,
+    );
+  });
 }

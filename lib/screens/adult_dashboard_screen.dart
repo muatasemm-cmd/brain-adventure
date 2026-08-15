@@ -7,6 +7,7 @@ import '../services/online_content_service.dart';
 import '../data/adult_challenge_data.dart';
 import 'adult_levels_screen.dart';
 import 'adult_special_challenge_screen.dart';
+import 'adult_insights_screen.dart';
 
 class AdultDashboardScreen extends StatefulWidget {
   final AdultPlayer player;
@@ -67,6 +68,16 @@ class _AdultDashboardScreenState extends State<AdultDashboardScreen> {
         title: Text('مرحبًا ${widget.player.name}'),
         centerTitle: true,
         actions: [
+          IconButton(
+            tooltip: 'الإنجازات والملاحظات',
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => AdultInsightsScreen(player: widget.player),
+              ),
+            ),
+            icon: const Icon(Icons.emoji_events_outlined),
+          ),
           IconButton(
             tooltip: 'تحديث المحتوى',
             onPressed: contentLoading

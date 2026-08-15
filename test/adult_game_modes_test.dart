@@ -29,4 +29,19 @@ void main() {
     expect(first, 1);
     expect(second, 2);
   });
+
+  test('يحفظ تحديد المستوى وبلاغ السؤال', () async {
+    await AdultStorage.savePlacement('adult_test', 5);
+    expect(await AdultStorage.loadPlacement('adult_test'), 5);
+
+    await AdultStorage.reportQuestion(
+      playerId: 'adult_test',
+      questionId: 'arabic_1_1',
+      question: 'سؤال تجريبي',
+      reason: 'الإجابة غير صحيحة',
+    );
+    final reports = await AdultStorage.loadReports('adult_test');
+    expect(reports, hasLength(1));
+    expect(reports.single['questionId'], 'arabic_1_1');
+  });
 }

@@ -6,6 +6,7 @@ import '../models/adult_question.dart';
 import '../services/adult_storage.dart';
 import '../services/narrator_service.dart';
 import '../widgets/fireworks_celebration.dart';
+import '../widgets/question_report_button.dart';
 
 class AdultQuizScreen extends StatefulWidget {
   final AdultPlayer player;
@@ -158,6 +159,10 @@ class _AdultQuizScreenState extends State<AdultQuizScreen> {
                             NarratorService.speak(question.question),
                         color: Colors.white70,
                         icon: const Icon(Icons.volume_up_rounded),
+                      ),
+                      QuestionReportButton(
+                        playerId: widget.player.id,
+                        question: question,
                       ),
                       const SizedBox(height: 16),
                       for (final option in question.options)

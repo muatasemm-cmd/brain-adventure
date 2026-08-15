@@ -6,6 +6,7 @@ import '../models/adult_player.dart';
 import '../models/adult_question.dart';
 import '../services/adult_storage.dart';
 import '../widgets/fireworks_celebration.dart';
+import '../widgets/question_report_button.dart';
 
 enum AdultPlayMode { daily, timed, survival, review }
 
@@ -251,6 +252,10 @@ class _AdultSpecialChallengeScreenState
                             fontWeight: FontWeight.bold,
                             height: 1.5,
                           ),
+                        ),
+                        QuestionReportButton(
+                          playerId: widget.player.id,
+                          question: question,
                         ),
                         const SizedBox(height: 20),
                         for (final option in question.options)
