@@ -22,4 +22,18 @@ void main() {
       );
     }
   });
+
+  test('اختبار تحديد المستوى يحتوي 15 سؤالًا مختلفًا', () {
+    final questions = adultPlacementQuestions(buildAdultCategories());
+    expect(questions, hasLength(15));
+    expect(questions.map((item) => item.id).toSet(), hasLength(15));
+    expect(questions.map((item) => item.question).toSet(), hasLength(15));
+
+    // Remove the challenge frame to ensure two entries do not hide the same
+    // base question behind different level wording.
+    final baseQuestions = questions
+        .map((item) => item.question.split(': ').last)
+        .toSet();
+    expect(baseQuestions, hasLength(15));
+  });
 }

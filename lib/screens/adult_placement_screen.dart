@@ -26,10 +26,7 @@ class _AdultPlacementScreenState extends State<AdultPlacementScreen> {
   void initState() {
     super.initState();
     final categories = buildAdultCategories();
-    questions = [
-      for (var i = 0; i < 15; i++)
-        categories[i % categories.length].questions[(i * 7 + 2) % 100],
-    ];
+    questions = adultPlacementQuestions(categories);
   }
 
   Future<void> next() async {

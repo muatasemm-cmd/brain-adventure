@@ -716,3 +716,16 @@ List<AdultQuestion> adultLevelQuestions(AdultCategory category, int level) =>
         .skip((level - 1) * adultQuestionsPerLevel)
         .take(adultQuestionsPerLevel)
         .toList(growable: false);
+
+List<AdultQuestion> adultPlacementQuestions(List<AdultCategory> categories) {
+  final questions = <AdultQuestion>[];
+  for (var index = 0; index < 15; index++) {
+    final categoryIndex = index % categories.length;
+    final occurrence = index ~/ categories.length;
+    // The first and second question from a category use different base facts,
+    // not merely another level's wording of the same fact.
+    final questionIndex = categoryIndex + occurrence * adultQuestionsPerLevel;
+    questions.add(categories[categoryIndex].questions[questionIndex]);
+  }
+  return questions;
+}
