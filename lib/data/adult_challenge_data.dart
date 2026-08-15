@@ -7,6 +7,22 @@ typedef _Fact = ({
   String why,
 });
 
+const adultLevelCount = 20;
+const adultQuestionsPerLevel = 5;
+
+const _challengeFrames = [
+  'سؤال مباشر',
+  'دقة المعلومة',
+  'اختبار الخبير',
+  'تحدي السرعة',
+  'محطة التركيز',
+  'بطاقة المعرفة',
+  'جولة الإتقان',
+  'اختبار الذاكرة',
+  'تحدي النخبة',
+  'المواجهة الأخيرة',
+];
+
 const _categoryInfo = <(String, String, String, String)>[
   ('knowledge', 'معلومات عامة', '🌐', 'ثقافة ومعرفة متنوعة'),
   ('history', 'التاريخ', '🏛️', 'أحداث وحضارات وشخصيات'),
@@ -426,6 +442,36 @@ const _facts = <String, List<_Fact>>{
       wrong: ['الزجاج', 'الوعد', 'القلم'],
       why: 'نطق أي كلمة ينهي الصمت.',
     ),
+    (
+      question: 'ما الذي يدخل الماء ولا يبتل؟',
+      answer: 'الضوء',
+      wrong: ['الورق', 'القطن', 'التراب'],
+      why: 'يمر الضوء في الماء دون أن يبتل.',
+    ),
+    (
+      question: 'ما الذي له أوراق وليس نباتًا؟',
+      answer: 'الكتاب',
+      wrong: ['القلم', 'الحجر', 'الماء'],
+      why: 'صفحات الكتاب تسمى أوراقًا.',
+    ),
+    (
+      question: 'ما الذي يسمع بلا أذن ويتكلم بلا لسان؟',
+      answer: 'الهاتف',
+      wrong: ['الباب', 'الكرسي', 'المصباح'],
+      why: 'ينقل الهاتف الصوت دون أعضاء حقيقية.',
+    ),
+    (
+      question: 'ما الذي يولد كبيرًا ثم يصغر مع الزمن؟',
+      answer: 'الشمعة',
+      wrong: ['الشجرة', 'الطفل', 'النهر'],
+      why: 'تقصر الشمعة كلما احترقت.',
+    ),
+    (
+      question: 'أي شيء إذا وضعته في الثلاجة لا يبرد؟',
+      answer: 'الفلفل الحار',
+      wrong: ['الماء', 'العصير', 'الحليب'],
+      why: 'الحار هنا وصف للطعم لا للحرارة.',
+    ),
   ],
   'arts': [
     (
@@ -457,6 +503,36 @@ const _facts = <String, List<_Fact>>{
       answer: 'فنسنت فان غوخ',
       wrong: ['سلفادور دالي', 'بيكاسو', 'رافائيل'],
       why: 'رسم فان غوخ ليلة النجوم.',
+    ),
+    (
+      question: 'من صاحب رواية موسم الهجرة إلى الشمال؟',
+      answer: 'الطيب صالح',
+      wrong: ['نجيب محفوظ', 'غسان كنفاني', 'توفيق الحكيم'],
+      why: 'ألّف الطيب صالح هذه الرواية.',
+    ),
+    (
+      question: 'ما الفن الذي يجمع قطعًا صغيرة لتكوين صورة؟',
+      answer: 'الفسيفساء',
+      wrong: ['النحت', 'الحفر', 'الخط'],
+      why: 'تتكون الفسيفساء من قطع صغيرة ملونة.',
+    ),
+    (
+      question: 'من مؤلف الإلياذة؟',
+      answer: 'هوميروس',
+      wrong: ['سقراط', 'أفلاطون', 'أرسطو'],
+      why: 'تنسب ملحمة الإلياذة إلى هوميروس.',
+    ),
+    (
+      question: 'أي آلة موسيقية وترية عربية شهيرة؟',
+      answer: 'العود',
+      wrong: ['الناي', 'الطبل', 'المزمار'],
+      why: 'العود آلة وترية أساسية في الموسيقى العربية.',
+    ),
+    (
+      question: 'ما الفن الذي يعتمد على الأداء أمام الجمهور؟',
+      answer: 'المسرح',
+      wrong: ['الرواية', 'التصوير', 'العمارة'],
+      why: 'يقوم المسرح على الأداء الحي.',
     ),
   ],
   'sports': [
@@ -490,6 +566,36 @@ const _facts = <String, List<_Fact>>{
       wrong: ['المبارزة', 'التنس', 'المصارعة'],
       why: 'كش ملك تعني نهاية مباراة الشطرنج.',
     ),
+    (
+      question: 'كم شوطًا في مباراة كرة السلة الرسمية؟',
+      answer: '4',
+      wrong: ['2', '3', '5'],
+      why: 'تقسم مباراة كرة السلة إلى أربعة أشواط.',
+    ),
+    (
+      question: 'أي رياضة تستخدم المضرب والكرة الصفراء؟',
+      answer: 'التنس',
+      wrong: ['السباحة', 'الجودو', 'الرماية'],
+      why: 'تستخدم كرة التنس الصفراء مع المضرب.',
+    ),
+    (
+      question: 'ما الرياضة التي تقام داخل حلبة وبقفازات؟',
+      answer: 'الملاكمة',
+      wrong: ['الغولف', 'التجديف', 'الجمباز'],
+      why: 'يتنافس الملاكمون داخل حلبة.',
+    ),
+    (
+      question: 'كم لاعبًا في فريق الكرة الطائرة داخل الملعب؟',
+      answer: '6',
+      wrong: ['5', '7', '9'],
+      why: 'يلعب ستة لاعبين من كل فريق.',
+    ),
+    (
+      question: 'أي سباق يجمع السباحة والدراجات والجري؟',
+      answer: 'الترايثلون',
+      wrong: ['الماراثون', 'الخماسي', 'التتابع'],
+      why: 'الترايثلون منافسة ثلاثية.',
+    ),
   ],
   'life': [
     (
@@ -522,6 +628,36 @@ const _facts = <String, List<_Fact>>{
       wrong: ['قرض جديد', 'ميزانية ترفيه', 'حساب مشتريات'],
       why: 'يغطي صندوق الطوارئ المفاجآت المالية.',
     ),
+    (
+      question: 'ماذا يعني سعر الفائدة على القرض؟',
+      answer: 'تكلفة اقتراض المال',
+      wrong: ['سعر السلعة', 'قيمة الضريبة', 'مبلغ الراتب'],
+      why: 'الفائدة تكلفة يدفعها المقترض.',
+    ),
+    (
+      question: 'ما التصرف الأفضل عند وصول رابط مصرفي مشبوه؟',
+      answer: 'عدم فتحه والتحقق من المصدر',
+      wrong: ['إدخال البيانات', 'إرساله للأصدقاء', 'تحميل المرفق'],
+      why: 'التحقق يحمي من التصيد.',
+    ),
+    (
+      question: 'ما الفرق بين الحاجة والرغبة؟',
+      answer: 'الحاجة أساسية والرغبة اختيارية',
+      wrong: ['لا فرق بينهما', 'الرغبة أهم', 'الحاجة ترفيهية'],
+      why: 'يمكن تأجيل الرغبات.',
+    ),
+    (
+      question: 'أي مهارة تساعد على حل الخلاف؟',
+      answer: 'الاستماع الفعال',
+      wrong: ['المقاطعة', 'رفع الصوت', 'التجاهل'],
+      why: 'الاستماع يساعد على الفهم.',
+    ),
+    (
+      question: 'ماذا يعني العرض والطلب؟',
+      answer: 'علاقة المتاح برغبة الشراء',
+      wrong: ['طريقة دفع', 'نوع ضريبة', 'حساب مصرفي'],
+      why: 'تؤثر العلاقة في السعر.',
+    ),
   ],
 };
 
@@ -539,13 +675,13 @@ List<AdultCategory> buildAdultCategories() => [
 List<AdultQuestion> _buildQuestions(String categoryId) {
   final facts = _facts[categoryId]!;
   return [
-    for (var level = 1; level <= 10; level++)
-      for (var index = 0; index < 5; index++)
+    for (var level = 1; level <= adultLevelCount; level++)
+      for (var index = 0; index < adultQuestionsPerLevel; index++)
         _question(
           categoryId,
           level,
           index,
-          facts[(level * 3 + index) % facts.length],
+          facts[((level - 1) * adultQuestionsPerLevel + index) % facts.length],
         ),
   ];
 }
@@ -556,12 +692,27 @@ AdultQuestion _question(String categoryId, int level, int index, _Fact fact) {
   final rotated = [...options.skip(shift), ...options.take(shift)];
   return AdultQuestion(
     id: '${categoryId}_${level}_${index + 1}',
-    question: 'المستوى $level • التحدي ${index + 1}\n${fact.question}',
+    question: _framedQuestion(fact.question, level, index),
     options: rotated,
     answer: fact.answer,
     explanation: fact.why,
   );
 }
 
+String _framedQuestion(String question, int level, int index) {
+  final frame = _challengeFrames[(level - 1) ~/ 2];
+  final prompts = [
+    '$frame: $question',
+    'اختر الإجابة الأدق في $frame: $question',
+    'ضمن $frame، أجب عن الآتي: $question',
+    '$frame يحتاج تركيزك؛ $question',
+    'أثبت إتقانك في $frame: $question',
+  ];
+  return prompts[index];
+}
+
 List<AdultQuestion> adultLevelQuestions(AdultCategory category, int level) =>
-    category.questions.skip((level - 1) * 5).take(5).toList(growable: false);
+    category.questions
+        .skip((level - 1) * adultQuestionsPerLevel)
+        .take(adultQuestionsPerLevel)
+        .toList(growable: false);

@@ -4,7 +4,8 @@ import '../models/adult_player.dart';
 import '../models/adult_question.dart';
 import '../services/adult_storage.dart';
 import '../services/online_content_service.dart';
-import 'adult_quiz_screen.dart';
+import '../data/adult_challenge_data.dart';
+import 'adult_levels_screen.dart';
 
 class AdultDashboardScreen extends StatefulWidget {
   final AdultPlayer player;
@@ -40,7 +41,8 @@ class _AdultDashboardScreenState extends State<AdultDashboardScreen> {
   }
 
   int completedFor(String categoryId) => [
-    for (var level = 1; level <= 10; level++) progress['$categoryId:$level'],
+    for (var level = 1; level <= adultLevelCount; level++)
+      progress['$categoryId:$level'],
   ].whereType<int>().length;
 
   @override
@@ -92,7 +94,7 @@ class _AdultDashboardScreenState extends State<AdultDashboardScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _Stat(value: '$points', label: 'نقطة'),
-                  _Stat(value: '$completed/60', label: 'مستوى'),
+                  _Stat(value: '$completed/200', label: 'مرحلة'),
                   _Stat(value: widget.player.level, label: 'البداية'),
                 ],
               ),
@@ -148,84 +150,22 @@ class _AdultDashboardScreenState extends State<AdultDashboardScreen> {
                 return _CategoryCard(
                   category: category,
                   completed: done,
-                  onTap: () => showLevels(category),
+                  onTap: () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => AdultLevelsScreen(
+                          player: widget.player,
+                          category: category,
+                        ),
+                      ),
+                    );
+                    await load();
+                  },
                 );
               },
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Future<void> showLevels(AdultCategory category) async {
-    await showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: const Color(0xFF1E293B),
-      builder: (sheetContext) => SafeArea(
-        child: DraggableScrollableSheet(
-          expand: false,
-          initialChildSize: .72,
-          maxChildSize: .92,
-          builder: (_, controller) => ListView(
-            controller: controller,
-            padding: const EdgeInsets.all(22),
-            children: [
-              Text(
-                '${category.icon} ${category.name}',
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 26,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-              const SizedBox(height: 18),
-              for (var level = 1; level <= 10; level++)
-                Card(
-                  color: const Color(0xFF334155),
-                  child: ListTile(
-                    leading: CircleAvatar(child: Text('$level')),
-                    title: Text(
-                      'المستوى $level',
-                      textDirection: TextDirection.rtl,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    subtitle: Text(
-                      progress.containsKey('${category.id}:$level')
-                          ? 'أفضل نتيجة: ${progress['${category.id}:$level']}/5'
-                          : '5 أسئلة',
-                      textDirection: TextDirection.rtl,
-                      style: const TextStyle(color: Colors.white70),
-                    ),
-                    trailing: Icon(
-                      progress.containsKey('${category.id}:$level')
-                          ? Icons.workspace_premium
-                          : Icons.play_circle_outline,
-                      color: const Color(0xFFFBBF24),
-                    ),
-                    onTap: () async {
-                      Navigator.pop(sheetContext);
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => AdultQuizScreen(
-                            player: widget.player,
-                            category: category,
-                            level: level,
-                          ),
-                        ),
-                      );
-                      await load();
-                    },
-                  ),
-                ),
-            ],
-          ),
         ),
       ),
     );
@@ -287,13 +227,13 @@ class _CategoryCard extends StatelessWidget {
             ),
             const Spacer(),
             LinearProgressIndicator(
-              value: completed / 10,
+              value: completed / adultLevelCount,
               color: const Color(0xFFA78BFA),
               backgroundColor: Colors.white12,
             ),
             const SizedBox(height: 5),
             Text(
-              '$completed من 10',
+              '$completed من $adultLevelCount',
               style: const TextStyle(color: Colors.white70),
             ),
           ],

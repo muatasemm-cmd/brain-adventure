@@ -16,7 +16,7 @@ void main() {
     expect(categories, hasLength(10));
     expect(
       categories.fold<int>(0, (sum, item) => sum + item.questions.length),
-      500,
+      1000,
     );
   });
 }
