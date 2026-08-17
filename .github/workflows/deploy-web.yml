@@ -26,6 +26,8 @@ jobs:
       - run: flutter pub get
       - run: flutter test
       - run: flutter build web --release --base-href "/${{ github.event.repository.name }}/"
+      - name: Add Enchanted Forest iPhone web game
+        run: cp -R web/enchanted-forest build/web/enchanted-forest
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
